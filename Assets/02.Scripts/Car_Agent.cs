@@ -8,23 +8,29 @@ using Unity.MLAgents.Actuators;
 public class Car_Agent : Agent
 {
 
-    private Stage_Manager stageManager;
+    private StageManeger stageManager;
 
     private Transform tr;
     private Transform targetTr;
     private Rigidbody rb;
 
+    private Vector3 origin;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+
+        origin = transform.localPosition;
+
     }
     public override void Initialize()
     {
-        MaxStep = 1000;
+
+     
+        MaxStep = 10000;
         tr = GetComponent<Transform>();
         rb = GetComponent<Rigidbody>();
-        stageManager = tr.parent.GetComponent<Stage_Manager>();
+        stageManager = tr.parent.GetComponent<StageManeger>();
 
     }
 
@@ -37,9 +43,10 @@ public class Car_Agent : Agent
         rb.angularVelocity = Vector3.zero;
 
         // 에이젼트의 위치를 불규칙하게 변경
-        tr.localPosition = new Vector3(transform.position.x,
-                                       transform.position.y,
+        tr.localPosition = new Vector3(origin.x, origin.y
+                                       ,
                                        Random.Range(-4.0f, 4.0f));
+
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -54,13 +61,19 @@ public class Car_Agent : Agent
         // Branch 1 좌/우 이동
         if (Input.GetKey(KeyCode.A)) actions[1] = 1;
         if (Input.GetKey(KeyCode.D)) actions[1] = 2;
+
+        //Branch 2 좌/우 회전
+        if (Input.GetKey(KeyCode.Q)) actions[2] = 1;
+        if (Input.GetKey(KeyCode.E)) actions[2] = 2;
     }
 
     public override void OnActionReceived(ActionBuffers actions)
     {
         var action = actions.DiscreteActions;
         Vector3 dir = Vector3.zero;
+
         Vector3 rot = Vector3.zero;
+  
 
         switch (action[0])
         {
@@ -73,8 +86,24 @@ public class Car_Agent : Agent
             case 1: dir = -tr.right; break;
             case 2: dir = tr.right; break;
         }
-        rb.AddForce(dir * 1.0f, ForceMode.VelocityChange);
 
+        switch (action[2])
+        {
+            case 1:
+                rot = -tr.up;
+                break;
+            case 2:
+                rot = tr.up;
+                break;
+        }
+
+
+        rb.AddForce(dir * 1.0f, ForceMode.VelocityChange);
+        tr.Rotate(rot, Time.deltaTime * 300.0f);
+
+
+        SetReward(-0.001f);
+        
     }
 
     private void OnCollisionEnter(Collision coll)
@@ -83,11 +112,6 @@ public class Car_Agent : Agent
         {
             AddReward(+1.0f);
             EndEpisode();
-
-        }
-        if (coll.collider.CompareTag("GOODSPACE"))
-        {
-            AddReward(+0.2f);
 
         }
         if (coll.collider.CompareTag("INGOODSPACE"))
