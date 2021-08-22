@@ -4,7 +4,7 @@ using UnityEngine;
 #pragma warning disable 649
 namespace UnityStandardAssets.Vehicles.Car
 {
-    internal enum CarDriveType
+/*    internal enum CarDriveType
     {
         FrontWheelDrive,
         RearWheelDrive,
@@ -15,7 +15,7 @@ namespace UnityStandardAssets.Vehicles.Car
     {
         MPH,
         KPH
-    }
+    }*/
 
     public class CarController : MonoBehaviour
     {
@@ -168,7 +168,7 @@ namespace UnityStandardAssets.Vehicles.Car
             GearChanging();
 
             AddDownForce();
-            CheckForWheelSpin();
+            //CheckForWheelSpin();
             TractionControl();
         }
 
@@ -269,7 +269,7 @@ namespace UnityStandardAssets.Vehicles.Car
         // 2) plays tiure skidding sounds
         // 3) leaves skidmarks on the ground
         // these effects are controlled through the WheelEffects class
-        private void CheckForWheelSpin()
+/*        private void CheckForWheelSpin()
         {
             // loop through all wheels
             for (int i = 0; i < 4; i++)
@@ -299,7 +299,7 @@ namespace UnityStandardAssets.Vehicles.Car
                 // end the trail generation
                 m_WheelEffects[i].EndSkidTrail();
             }
-        }
+        }*/
 
         // crude traction control that reduces the power to wheel if the car is wheel spinning too much
         private void TractionControl()

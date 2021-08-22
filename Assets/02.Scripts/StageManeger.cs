@@ -10,6 +10,7 @@ public class StageManeger : MonoBehaviour
     public int parkingareacount;
     public Transform pullSpaceTr;
     public GameObject car;
+    public GameObject ParkingLine;
 
     int carCount = 0;
     public int maxCarCount = 1;
@@ -21,6 +22,9 @@ public class StageManeger : MonoBehaviour
         //InitStage();
         
     }
+
+
+
     public void InitStage()
     {
         parkingarea.Clear();
@@ -50,7 +54,11 @@ public class StageManeger : MonoBehaviour
             parkingarea.RemoveAt(carindex);
             if (++carCount >= maxCarCount)
             {
+
+               // GameObject PKLINE = Instantiate(ParkingLine, parkingarea[carindex].position, parkingarea[carindex].rotation, pullSpaceTr);
+               
                 break;
+                
             }
         }
 
@@ -58,6 +66,9 @@ public class StageManeger : MonoBehaviour
 
     private void Update()
     {
+       
+       
+
 
     }
 

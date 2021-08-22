@@ -13,14 +13,21 @@ public class Car_Agent : Agent
     private Transform tr;
     private Transform targetTr;
     private Rigidbody rb;
-
+    [SerializeField] private WheelCollider[] m_WheelColliders = new WheelCollider[4];
+    [SerializeField] private GameObject[] m_WheelMeshes = new GameObject[4];
     private Vector3 origin;
+    private Quaternion[] m_WheelMeshLocalRotations;
 
     // Start is called before the first frame update
     void Start()
     {
 
         origin = transform.localPosition;
+        m_WheelMeshLocalRotations = new Quaternion[4];
+        for (int i = 0; i < 4; i++)
+        {
+           m_WheelMeshLocalRotations[i] = m_WheelMeshes[i].transform.localRotation;
+        }
 
     }
     public override void Initialize()
@@ -45,7 +52,7 @@ public class Car_Agent : Agent
         // 에이젼트의 위치를 불규칙하게 변경
         tr.localPosition = new Vector3(origin.x, origin.y
                                        ,
-                                       Random.Range(-4.0f, 4.0f));
+                                       Random.Range(-10.0f, 10.0f));
 
     }
 
@@ -73,7 +80,15 @@ public class Car_Agent : Agent
         Vector3 dir = Vector3.zero;
 
         Vector3 rot = Vector3.zero;
-  
+
+        for (int i = 0; i < 4; i++)
+        {
+            Quaternion quat;
+            Vector3 position;
+            m_WheelColliders[i].GetWorldPose(out position, out quat);
+            m_WheelMeshes[i].transform.position = position;
+            m_WheelMeshes[i].transform.rotation = quat;
+        }
 
         switch (action[0])
         {
@@ -97,10 +112,14 @@ public class Car_Agent : Agent
                 break;
         }
 
+ 
+
+
+
 
         rb.AddForce(dir * 1.0f, ForceMode.VelocityChange);
         tr.Rotate(rot, Time.deltaTime * 300.0f);
-
+        
 
         SetReward(-0.001f);
         
