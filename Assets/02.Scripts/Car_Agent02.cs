@@ -59,7 +59,7 @@ public class Car_Agent02 : Agent
             rb.angularVelocity = Vector3.zero;
 
             // 에이젼트의 위치를 불규칙하게 변경
-            tr.localPosition = new Vector3(Random.Range(origin.x- 10.0f, origin.x+ -10.0f), origin.y
+            tr.localPosition = new Vector3(Random.Range(origin.x - 3.0f, origin.x + 3.0f), origin.y
                                            ,
                                            Random.Range(origin.z - 3.0f, origin.z+3.0f));
 
@@ -73,6 +73,16 @@ public class Car_Agent02 : Agent
             actions[0] = Input.GetAxis("Horizontal");
             actions[1] = Input.GetAxis("Vertical");
         }
+
+        public override void CollectObservations(VectorSensor sensor)
+        {
+            sensor.AddObservation(tr.localPosition);
+            sensor.AddObservation(rb.velocity.x);
+            sensor.AddObservation(rb.velocity.y);
+        }
+
+
+
 
         public override void OnActionReceived(ActionBuffers actions)
         {
@@ -89,7 +99,7 @@ public class Car_Agent02 : Agent
 
             SetReward(-0.001f);
 
-            m_Car.Move(h, v, v, 0f);
+            m_Car.Move(h * 2.0f, v*2.0f, v * 2.0f, 0f);
 
         }
 
@@ -137,6 +147,19 @@ public class Car_Agent02 : Agent
             }
 
 
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("BADSPACE"))
+            {
+                AddReward(-0.5f);
+            }
+            if (other.CompareTag("INGOODSPACE"))
+            {
+                AddReward(+0.2f);
+
+            }
         }
 
     }
