@@ -11,6 +11,8 @@ public class StageManeger : MonoBehaviour
     public Transform pullSpaceTr;
     public GameObject car;
     public GameObject ParkingLine;
+    
+    public List<Transform> goodSpace = new List<Transform>();
 
     int carCount = 0;
     public int maxCarCount = 1;
@@ -29,6 +31,7 @@ public class StageManeger : MonoBehaviour
     {
         parkingarea.Clear();
         carCount = 0;
+        
 
         foreach (var parkObject in transform.Find("ParkZone").GetComponentsInChildren<Transform>())
         {
@@ -37,8 +40,19 @@ public class StageManeger : MonoBehaviour
         parkingarea.RemoveAt(0);
         parkingareacount = parkingarea.Count;
 
-        // 기존에 생성된 PullSpace 삭제
-        foreach (Transform obj in pullSpaceTr.transform)
+        goodSpace.Clear();
+
+        foreach (Transform GSpace in transform.Find("GoodSpace").transform) 
+        {
+ /*           print(GSpace + "불린다");
+            print("여기도 불리니?");*/
+            GSpace.gameObject.SetActive(true);
+            goodSpace.Add(GSpace);
+        }
+
+
+            // 기존에 생성된 PullSpace 삭제
+            foreach (Transform obj in pullSpaceTr.transform)
         {
             Destroy(obj.gameObject);
         }
@@ -66,9 +80,8 @@ public class StageManeger : MonoBehaviour
 
     private void Update()
     {
-       
-       
-
+        
+        
 
     }
 

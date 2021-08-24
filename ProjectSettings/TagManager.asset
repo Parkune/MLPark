@@ -10,6 +10,8 @@ TagManager:
   - INGOODSPACE
   - CAR
   - BADSPACE
+  - StartLine
+  - FLOOR
   layers:
   - Default
   - TransparentFX

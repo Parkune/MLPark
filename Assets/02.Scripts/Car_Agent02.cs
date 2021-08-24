@@ -21,7 +21,9 @@ public class Car_Agent02 : Agent
         private Rigidbody rb;
 
         private Vector3 origin;
+        private Vector3 vector;
 
+        public GameObject startLine;
 
         public void Awake()
         {
@@ -47,7 +49,7 @@ public class Car_Agent02 : Agent
             tr = GetComponent<Transform>();
             rb = GetComponent<Rigidbody>();
             stageManager = tr.parent.GetComponent<StageManeger>();
-
+           
         }
 
         public override void OnEpisodeBegin()
@@ -79,8 +81,39 @@ public class Car_Agent02 : Agent
             sensor.AddObservation(tr.localPosition);
             sensor.AddObservation(rb.velocity.x);
             sensor.AddObservation(rb.velocity.y);
+            sensor.AddObservation(vector);
+            Vector3 checkPoint = GameObject.FindGameObjectWithTag("INGOODSPACE").transform.forward;
+            float dirDot = Vector3.Dot(tr.forward , checkPoint);
+            sensor.AddObservation(dirDot);
+            AddReward(dirDot * 0.05f);
+           // print(dirDot);
+
+            Vector3 dirPosition = checkPoint - vector;
+            if (dirPosition.x <= 1)
+            {
+                AddReward(0.02f);
+            }
+            
+
+
         }
 
+
+        public void FixedUpdate()
+        {
+
+            Vector3 checkStartLine = startLine.transform.position;
+
+            Vector3 dir = transform.position - checkStartLine;
+
+            print(dir + "스타트라인과의 거리");
+            
+            if (dir.x <= -1)
+            {
+                AddReward(-0.001f);
+                print(dir + "10m 이내에 위치해있음");
+            }
+        }
 
 
 
@@ -129,6 +162,7 @@ public class Car_Agent02 : Agent
             if (coll.collider.CompareTag("INGOODSPACE"))
             {
                 AddReward(+0.5f);
+               
 
             }
             if (coll.collider.CompareTag("CAR"))
@@ -138,12 +172,12 @@ public class Car_Agent02 : Agent
             }
             if (coll.collider.CompareTag("WALL"))
             {
-                AddReward(-0.2f);
+                AddReward(-0.1f);
 
             }
             if (coll.collider.CompareTag("BADSPACE"))
             {
-                AddReward(-0.5f);
+                AddReward(-0.05f);
             }
 
 
@@ -157,11 +191,32 @@ public class Car_Agent02 : Agent
             }
             if (other.CompareTag("INGOODSPACE"))
             {
-                AddReward(+0.2f);
+                AddReward(+0.8f);
+                other.gameObject.SetActive(false);
 
             }
         }
 
+        private void OnCollisionStay(Collision collision)
+        {
+            
+            if(collision.gameObject.CompareTag("FLOOR"))
+            {
+
+                AddReward(-0.01f);
+            }
+
+
+        }
+
+
+
+        private void Update()
+        {
+           // print(GetCumulativeReward());
+        }
     }
+
+
   }
 
