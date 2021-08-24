@@ -21,7 +21,7 @@ public class Car_Agent02 : Agent
         private Rigidbody rb;
 
         private Vector3 origin;
-        private Vector3 vector;
+        //private Vector3 vector;
 
         public GameObject startLine;
 
@@ -59,6 +59,7 @@ public class Car_Agent02 : Agent
             // 물리력을 초기화
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
+            tr.eulerAngles = new Vector3(0, -180, 0);
 
             // 에이젼트의 위치를 불규칙하게 변경
             tr.localPosition = new Vector3(Random.Range(origin.x - 3.0f, origin.x + 3.0f), origin.y
@@ -81,18 +82,22 @@ public class Car_Agent02 : Agent
             sensor.AddObservation(tr.localPosition);
             sensor.AddObservation(rb.velocity.x);
             sensor.AddObservation(rb.velocity.y);
-            sensor.AddObservation(vector);
+            //sensor.AddObservation(vector);
             Vector3 checkPoint = GameObject.FindGameObjectWithTag("INGOODSPACE").transform.forward;
+            //Vector3 checkPointPosition = GameObject.FindGameObjectWithTag("INGOODSPACE").transform.localPosition;
             float dirDot = Vector3.Dot(tr.forward , checkPoint);
             sensor.AddObservation(dirDot);
-            AddReward(dirDot * 0.05f);
-           // print(dirDot);
+            AddReward(dirDot * 0.002f);
+          //  print(dirDot);
 
-            Vector3 dirPosition = checkPoint - vector;
-            if (dirPosition.x <= 1)
+          /*  Vector3 dirPosition = checkPointPosition - tr.localPosition;
+            float positionLength = Vector3.Magnitude(dirPosition);
+            print(positionLength+"랭스가 이만해");
+            if (positionLength <= 2)
             {
-                AddReward(0.02f);
-            }
+                print("add먹었다.");
+                AddReward(0.002f);
+            }*/
             
 
 
@@ -101,29 +106,32 @@ public class Car_Agent02 : Agent
 
         public void FixedUpdate()
         {
+            Vector3 vector = transform.position;
 
-            Vector3 checkStartLine = startLine.transform.position;
-
-            Vector3 dir = transform.position - checkStartLine;
-
-            print(dir + "스타트라인과의 거리");
-            
-            if (dir.x <= -1)
-            {
-                AddReward(-0.001f);
-                print(dir + "10m 이내에 위치해있음");
-            }
         }
+
+        /*   Vector3 checkStartLine = startLine.transform.position;
+
+        Vector3 dir = transform.position - checkStartLine;
+
+        print(dir + "스타트라인과의 거리");
+
+        if (dir.x <= -1)
+        {
+            AddReward(-0.001f);
+            print(dir + "10m 이내에 위치해있음");
+        }*/
+
 
 
 
         public override void OnActionReceived(ActionBuffers actions)
         {
             var action = actions.ContinuousActions;
-           // Vector3 dir = Vector3.zero;
+           Vector3 dir = Vector3.zero;
+           Vector3 rot = Vector3.zero;
 
-         /*   Vector3 rot = Vector3.zero;
-            Vector3 dir = (Vector3.forward * action[0]) + (Vector3.right * action[1]);
+           /* Vector3 dir = (Vector3.forward * action[0]) + (Vector3.right * action[1]);
             rb.AddForce(dir.normalized * 50.0f);*/
 
             float h = action[0];
@@ -149,6 +157,8 @@ public class Car_Agent02 : Agent
             m_Car.Move(h, v, v, 0f);
 #endif
         }*/
+
+
         private void OnCollisionEnter(Collision coll)
         {
             if (coll.collider.CompareTag("PERFECTSPACE"))
@@ -202,7 +212,7 @@ public class Car_Agent02 : Agent
             
             if(collision.gameObject.CompareTag("FLOOR"))
             {
-
+                
                 AddReward(-0.01f);
             }
 

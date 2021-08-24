@@ -5460,6 +5460,18 @@ PrefabInstance:
       propertyPath: m_StartVerticalOffset
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 2849845812812374428, guid: d2930515a25f9c54083909778f7ec016, type: 3}
+      propertyPath: m_DetectableTags.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2849845812812374428, guid: d2930515a25f9c54083909778f7ec016, type: 3}
+      propertyPath: m_DetectableTags.Array.data[5]
+      value: StartLine
+      objectReference: {fileID: 0}
+    - target: {fileID: 2849845812812374428, guid: d2930515a25f9c54083909778f7ec016, type: 3}
+      propertyPath: m_DetectableTags.Array.data[6]
+      value: FLOOR
+      objectReference: {fileID: 0}
     - target: {fileID: 2849845812812374431, guid: d2930515a25f9c54083909778f7ec016, type: 3}
       propertyPath: MaxStep
       value: 10000
