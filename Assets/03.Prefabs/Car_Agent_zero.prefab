@@ -6249,7 +6249,10 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 5000
+  MaxStep: 20000
+  startLine: {fileID: 0}
+  checkPoints: []
+  nextIdx: 0
 --- !u!114 &2849845812812374428
 MonoBehaviour:
   m_ObjectHideFlags: 0
